@@ -5,11 +5,15 @@ namespace App\Filament\Admin\Resources;
 use App\Filament\Admin\Resources\MembershipResource\Pages;
 use App\Filament\Admin\Resources\MembershipResource\RelationManagers;
 use App\Models\Membership;
+use App\Models\MembershipType;
+use App\Models\Player;
 use Carbon\Carbon;
 use Closure;
 use Coolsam\FilamentFlatpickr\Forms\Components\Flatpickr;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -28,32 +32,56 @@ class MembershipResource extends Resource
             ->schema([
                 Forms\Components\Select::make('player_id')
                     ->relationship('player', 'first_name')
-                    ->required(),
-                Forms\Components\Select::make('membership_type_id')
-                    ->relationship('membershipType', 'name')
-                    ->required(),
-//                Forms\Components\TextInput::make('field')
-//                    ->required(),
-                Flatpickr::make('valid_for')
-                    ->allowInput(false)
-                    ->monthSelect()
-                    ->dateFormat('Y-m-d')
-                    ->default(Carbon::now()->toISOString())
+                    ->native(false)
                     ->required()
-                    ->rules([
-                        function (\Filament\Forms\Get $get) {
-                            return function (string $attribute, $value, Closure $fail) use ($get) {
-                                $membership = Membership::where('player_id', $get('player_id'))
-                                    ->where('valid_for', Carbon::make($value)->firstOfMonth()->format('Y-m-d'))
-                                    ->first();
+                    ->afterStateHydrated(function (Set $set, Get $get) {
+                        $player = Player::with('membershipType')->where('id', $get('player_id'))->first();
+                        if($player){
+                            $set('price', $player->membershipType->price);
+                            $set('membership_type_id', $player->membershipType->id);
+                            $set('membership_type', $player->membershipType->name);
+                        }
+                    })
+                    ->afterStateUpdated(function (Set $set, Get $get) {
+                        $player = Player::with('membershipType')->where('id', $get('player_id'))->first();
+                        if($player){
+                            $set('price', $player->membershipType->price);
+                            $set('membership_type_id', $player->membershipType->id);
+                            $set('membership_type', $player->membershipType->name);
+                        }
+                    })
+                    ->live(),
+                Forms\Components\DatePicker::make('valid_for')->native(false),
 
-                                if ($membership) {
-                                    $fail('Record with this value exists.');
-                                }
-                            };
-                        },
-                    ])
-                    ->maxDate(Carbon::now()->addMonth()),
+//                Flatpickr::make('valid_for')
+//                    ->allowInput(false)
+//                    ->monthSelect()
+//                    ->dateFormat('Y-m-d')
+//                    ->default(Carbon::now()->toISOString())
+//                    ->required()
+//                    ->rules([
+//                        function (\Filament\Forms\Get $get) {
+//                            return function (string $attribute, $value, Closure $fail) use ($get) {
+//                                $membership = Membership::where('player_id', $get('player_id'))
+//                                    ->where('valid_for', Carbon::make($value)->firstOfMonth()->format('Y-m-d'))
+//                                    ->first();
+//
+//                                if ($membership) {
+//                                    $fail('Record with this value exists.');
+//                                }
+//                            };
+//                        },
+//                    ])
+//                    ->maxDate(Carbon::now()->addMonth()),
+                Forms\Components\TextInput::make('membership_type')
+                    ->readOnly()
+                    ->disabled(),
+                Forms\Components\Hidden::make('membership_type_id'),
+                Forms\Components\TextInput::make('price')
+                    ->readOnly()
+                    ->numeric()
+                    ->prefix('KM'),
+
                 Forms\Components\Toggle::make('paid'),
             ]);
     }
@@ -70,6 +98,8 @@ class MembershipResource extends Resource
                     ->sortable(),
                 Tables\Columns\IconColumn::make('paid')
                     ->boolean(),
+                Tables\Columns\TextColumn::make('price')
+                    ->money('BAM'),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()

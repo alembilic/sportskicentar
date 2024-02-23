@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Pages;
 
+use App\Models\Club;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
@@ -14,12 +15,14 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Support\Exceptions\Halt;
 use Illuminate\Support\Facades\Cache;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
 class ClubSettings extends Page implements HasForms
 {
     use InteractsWithForms;
 
     public ?array $data = [];
+    public Club $club_model;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
@@ -27,7 +30,9 @@ class ClubSettings extends Page implements HasForms
 
     public function mount(): void
     {
-        $this->form->fill(Cache::get('club.' . auth()->user()->club_id));
+        $club = Cache::get('club.' . auth()->user()->club_id);
+        if (!$club) $club = Club::find(auth()->user()->club_id)->toArray();
+        $this->form->fill($club);
     }
 
     public function form(Form $form): Form
@@ -36,6 +41,8 @@ class ClubSettings extends Page implements HasForms
             ->schema([
                 Split::make([
                     Section::make([
+//                        SpatieMediaLibraryFileUpload::make('logo'),
+
                         FileUpload::make('logo')->directory('logos'),
                         TextInput::make('name')->required(),
                         TextInput::make('official_name')->required(),
@@ -63,11 +70,13 @@ class ClubSettings extends Page implements HasForms
     public function save(): void
     {
         try {
-            $data = $this->form->getState();
+            $form = $this->form->getState();
 
-            auth()->user()->club->update($data);
+            auth()->user()->club->update($form);
+            $data = auth()->user()->club->toArray();
 
-            Cache::forever("club." . auth()->user()->id, $data);
+            Cache::forever("club." . auth()->user()->club_id, $data);
+            Cache::forever("club." . $data['slug'], $data);
 
             Notification::make()
                 ->title(__('Updated successfully'))

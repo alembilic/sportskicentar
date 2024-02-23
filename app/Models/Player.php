@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Player extends Model
@@ -20,5 +21,10 @@ class Player extends Model
     public function memberships()
     {
         return $this->hasMany(Membership::class);
+    }
+
+    public function club(): BelongsTo
+    {
+        return $this->belongsTo(Club::class);
     }
 }

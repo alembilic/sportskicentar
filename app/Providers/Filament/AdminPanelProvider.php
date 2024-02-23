@@ -25,21 +25,22 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
-            ->brandLogo(fn() => view('filament.admin.logo'))
             ->id('admin')
             ->path('admin')
+            ->pages([
+                Pages\Dashboard::class,
+            ])
             ->login(Login::class)
             ->passwordReset()
             ->emailVerification()
             ->profile()
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Indigo,
             ])
+            ->brandLogo(fn() => view('filament.admin.logo'))
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
-            ->pages([
-                Pages\Dashboard::class,
-            ])
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,

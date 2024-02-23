@@ -15,15 +15,22 @@ class Login extends \Filament\Pages\Auth\Login
 {
     public function mount(): void
     {
+        $this->data['clubTenant'] = null;
         if (Filament::auth()->check()) {
             redirect()->intended(Filament::getUrl());
         }
 
         $host = explode('.', $_SERVER['HTTP_HOST']);
 
-        $club = Club::where('slug', $host[0])->first();
+        if (str_contains($_SERVER['HTTP_HOST'], '.') and $host[0]) {
+            $club = Cache::get("club.{$host[0]}") ?: Club::where('slug', $host[0])->first()->toArray();
 
-        Cache::forever("club.{$club->id}", $club->toArray());
+            if ($club) {
+                Cache::forever("club.{$host[0]}", $club);
+                Cache::forever("club.{$club['id']}", $club);
+                $this->data['clubTenant'] = $host[0];
+            }
+        }
 
         $this->form->fill();
     }
@@ -50,7 +57,7 @@ class Login extends \Filament\Pages\Auth\Login
 
         $data = $this->form->getState();
 
-        if (! Filament::auth()->attempt($this->getCredentialsFromFormData($data), $data['remember'] ?? false)) {
+        if (!Filament::auth()->attempt($this->getCredentialsFromFormData($data), $data['remember'] ?? false)) {
             $this->throwFailureValidationException();
         }
 
@@ -58,7 +65,7 @@ class Login extends \Filament\Pages\Auth\Login
 
         if (
             ($user instanceof FilamentUser) &&
-            (! $user->canAccessPanel(Filament::getCurrentPanel()))
+            (!$user->canAccessPanel(Filament::getCurrentPanel()))
         ) {
             Filament::auth()->logout();
 

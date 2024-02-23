@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('membership_type_id')->constrained();
             $table->date('valid_for');
             $table->boolean('paid')->default(0);
+            $table->integer('price')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

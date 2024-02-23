@@ -1,0 +1,9 @@
+.fi-logo:has(> .logo-image-login) {
+    height: 6rem !important;
+    width:auto;
+}
+
+.fi-logo:has(> .logo-image) {
+    height: 2.5rem !important;
+    width:auto;
+}
