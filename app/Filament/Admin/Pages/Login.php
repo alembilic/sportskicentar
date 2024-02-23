@@ -20,7 +20,7 @@ class Login extends \Filament\Pages\Auth\Login
             redirect()->intended(Filament::getUrl());
         }
 
-        $host = explode('.', $_SERVER['HTTP_HOST']);
+        $host = explode('.' . config('app.domain'), $_SERVER['HTTP_HOST']);
 
         if (str_contains($_SERVER['HTTP_HOST'], '.') and $host[0]) {
             $club = Cache::get("club.{$host[0]}") ?: Club::where('slug', $host[0])->first()->toArray();
