@@ -22,17 +22,15 @@ class Login extends \Filament\Pages\Auth\Login
 
         $host = explode('.' . config('app.domain'), $_SERVER['HTTP_HOST']);
 
-        dd($host, $_SERVER['HTTP_HOST'], config('app.domain'));
-
-        if (str_contains($_SERVER['HTTP_HOST'], '.' . config('app.domain')) and $host[0]) {
-            $club = Cache::get("club.{$host[0]}") ?: Club::where('slug', $host[0])->first()->toArray();
-
-            if ($club) {
-                Cache::forever("club.{$host[0]}", $club);
-                Cache::forever("club.{$club['id']}", $club);
-                $this->data['clubTenant'] = $host[0];
-            }
-        }
+//        if (str_contains($_SERVER['HTTP_HOST'], '.' . config('app.domain')) and $host[0]) {
+//            $club = Cache::get("club.{$host[0]}") ?: Club::where('slug', $host[0])->first()->toArray();
+//
+//            if ($club) {
+//                Cache::forever("club.{$host[0]}", $club);
+//                Cache::forever("club.{$club['id']}", $club);
+//                $this->data['clubTenant'] = $host[0];
+//            }
+//        }
 
         $this->form->fill();
     }
