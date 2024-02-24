@@ -22,11 +22,6 @@ class Membership extends Model
         );
     }
 
-    public function setValidForAttribute($value)
-    {
-        $this->attributes['valid_for'] = Carbon::make($value);
-    }
-
     public function player(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Player::class);

@@ -16,6 +16,10 @@ trait HasClub
     protected static function booted(): void
     {
         static::addGlobalScope(new ClubScope());
+
+        static::creating(function ($model) {
+            $model->club_id = auth()->user()->club_id;
+        });
     }
 
     public function club(): BelongsTo

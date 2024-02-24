@@ -44,13 +44,13 @@ class ClubSettings extends Page implements HasForms
 //                        SpatieMediaLibraryFileUpload::make('logo'),
 
                         FileUpload::make('logo')->directory('logos'),
-                        TextInput::make('name')->required(),
-                        TextInput::make('official_name')->required(),
+                        TextInput::make('name')->required()->maxLength(50),
+                        TextInput::make('official_name')->required()->maxLength(50),
                     ]),
                     Section::make([
-                        TextInput::make('address')->required(),
-                        TextInput::make('web_page')->required(),
-                        TextInput::make('id_number')->required(),
+                        TextInput::make('address')->required()->maxLength(50),
+                        TextInput::make('web_page')->required()->maxLength(50),
+                        TextInput::make('id_number')->required()->maxLength(50),
                         TextInput::make('established_at')->numeric()->required(),
                     ])->grow(false),
                 ])->from('md')

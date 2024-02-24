@@ -29,6 +29,7 @@ class MembershipTypeResource extends Resource
                 Forms\Components\TextInput::make('price')
                     ->required()
                     ->numeric()
+                    ->maxValue(1000)
                     ->prefix('KM'),
             ]);
     }
@@ -60,6 +61,8 @@ class MembershipTypeResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->requiresConfirmation()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -79,8 +82,8 @@ class MembershipTypeResource extends Resource
     {
         return [
             'index' => Pages\ListMembershipTypes::route('/'),
-            'create' => Pages\CreateMembershipType::route('/create'),
-            'edit' => Pages\EditMembershipType::route('/{record}/edit'),
+//            'create' => Pages\CreateMembershipType::route('/create'),
+//            'edit' => Pages\EditMembershipType::route('/{record}/edit'),
         ];
     }
 }

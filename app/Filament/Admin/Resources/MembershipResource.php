@@ -36,7 +36,7 @@ class MembershipResource extends Resource
                     ->required()
                     ->afterStateHydrated(function (Set $set, Get $get) {
                         $player = Player::with('membershipType')->where('id', $get('player_id'))->first();
-                        if($player){
+                        if ($player) {
                             $set('price', $player->membershipType->price);
                             $set('membership_type_id', $player->membershipType->id);
                             $set('membership_type', $player->membershipType->name);
@@ -44,7 +44,7 @@ class MembershipResource extends Resource
                     })
                     ->afterStateUpdated(function (Set $set, Get $get) {
                         $player = Player::with('membershipType')->where('id', $get('player_id'))->first();
-                        if($player){
+                        if ($player) {
                             $set('price', $player->membershipType->price);
                             $set('membership_type_id', $player->membershipType->id);
                             $set('membership_type', $player->membershipType->name);
@@ -97,9 +97,11 @@ class MembershipResource extends Resource
                 Tables\Columns\TextColumn::make('valid_for')
                     ->sortable(),
                 Tables\Columns\IconColumn::make('paid')
-                    ->boolean(),
+                    ->boolean()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('price')
-                    ->money('BAM'),
+                    ->money('BAM')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
@@ -118,6 +120,8 @@ class MembershipResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->requiresConfirmation()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

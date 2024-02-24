@@ -2,19 +2,21 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Resources\PlayerResource\Pages;
-use App\Filament\Resources\PlayerResource\RelationManagers;
-use App\Models\Player;
-use Coolsam\FilamentFlatpickr\Forms\Components\Flatpickr;
+use App\Filament\Admin\Resources\CodebookResource\Pages;
+use App\Filament\Admin\Resources\CodebookResource\RelationManagers;
+use App\Models\Codebook;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Resources\Components\Tab;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class PlayerResource extends Resource
+class CodebookResource extends Resource
 {
-    protected static ?string $model = Player::class;
+    protected static ?string $model = Codebook::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -22,17 +24,6 @@ class PlayerResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('first_name')->required()->maxLength(50),
-                Forms\Components\TextInput::make('last_name')->required()->maxLength(50),
-                Flatpickr::make('date_of_birth')
-                    ->altInput(true)
-                    ->altFormat('d.m.Y')
-                    ->required()
-                    ->maxDate(today()),
-                Forms\Components\Select::make('membership_type_id')
-                    ->relationship('membershipType', 'name')
-                    ->required()
-                    ->native(false),
             ]);
     }
 
@@ -40,19 +31,14 @@ class PlayerResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('first_name')
+                Tables\Columns\TextColumn::make('code_type')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('value')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('last_name')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('date_of_birth')
-                    ->dateTime('d.m.Y')
-                    ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('membershipType.name')
-                    ->searchable()
-                    ->sortable(),
+//                Tables\Columns\IconColumn::make('is_global')
+//                    ->boolean(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
@@ -70,7 +56,23 @@ class PlayerResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->form([
+                        Forms\Components\Select::make('code_type')
+//                            ->default()
+                            ->required()
+                            ->options(fn() => Codebook::getOptions())
+                            ->native(false),
+                        Forms\Components\TextInput::make('value')
+                            ->required()
+                            ->maxLength(50),
+                    ])
+                    ->mutateRecordDataUsing(function (array $data): array {
+                        $options = Codebook::getOptions();
+                        $data['code_type'] = array_search($data['code_type'], $options);;
+
+                        return $data;
+                    }),
                 Tables\Actions\DeleteAction::make()
                     ->requiresConfirmation()
             ])
@@ -91,9 +93,9 @@ class PlayerResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => \App\Filament\Admin\Resources\PlayerResource\Pages\ListPlayers::route('/'),
-            'create' => \App\Filament\Admin\Resources\PlayerResource\Pages\CreatePlayer::route('/create'),
-            'edit' => \App\Filament\Admin\Resources\PlayerResource\Pages\EditPlayer::route('/{record}/edit'),
+            'index' => Pages\ListCodebooks::route('/'),
+//            'create' => Pages\CreateCodebook::route('/create'),
+//            'edit' => Pages\EditCodebook::route('/{record}/edit'),
         ];
     }
 }
