@@ -5,6 +5,22 @@ use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
+$hostname = $_SERVER['HTTP_HOST'];
+
+if (str_contains($_SERVER['HTTP_HOST'], 'localhost')) {
+    $parts = explode('.', $hostname);
+    $subdomain = (count($parts) >= 2) ? $parts[0] : null;
+    $appUrl = $subdomain ? "http://$subdomain.localhost:8000" : "http://localhost:8000";
+} else {
+    $parts = explode('.', $hostname);
+    $subdomain = (count($parts) >= 3) ? $parts[0] : null;
+    $appUrl = $subdomain
+        ? "https://$subdomain." . config('app.domain')
+        : "https://" . config('app.domain');
+}
+
+putenv('APP_URL' . '=' . $appUrl);
+
 /*
 |--------------------------------------------------------------------------
 | Check If The Application Is Under Maintenance
@@ -16,7 +32,7 @@ define('LARAVEL_START', microtime(true));
 |
 */
 
-if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
+if (file_exists($maintenance = __DIR__ . '/../storage/framework/maintenance.php')) {
     require $maintenance;
 }
 
@@ -31,7 +47,7 @@ if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php'))
 |
 */
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -44,7 +60,7 @@ require __DIR__.'/../vendor/autoload.php';
 |
 */
 
-$app = require_once __DIR__.'/../bootstrap/app.php';
+$app = require_once __DIR__ . '/../bootstrap/app.php';
 
 $kernel = $app->make(Kernel::class);
 
