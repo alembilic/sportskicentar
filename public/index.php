@@ -7,17 +7,18 @@ define('LARAVEL_START', microtime(true));
 
 $hostname = $_SERVER['HTTP_HOST'];
 
+$parts = explode('.', $hostname);
 if (str_contains($_SERVER['HTTP_HOST'], 'localhost')) {
-    $parts = explode('.', $hostname);
     $subdomain = (count($parts) >= 2) ? $parts[0] : null;
     $appUrl = $subdomain ? "http://$subdomain.localhost:8000" : "http://localhost:8000";
 } else {
-    $parts = explode('.', $hostname);
     $subdomain = (count($parts) >= 3) ? $parts[0] : null;
     $appUrl = $subdomain
         ? "https://$subdomain." . config('app.domain')
         : "https://" . config('app.domain');
 }
+
+define('SUBDOMAIN', $subdomain ?? '');
 
 putenv('APP_URL' . '=' . $appUrl);
 

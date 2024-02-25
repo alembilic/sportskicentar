@@ -20,17 +20,14 @@ class Login extends \Filament\Pages\Auth\Login
             redirect()->intended(Filament::getUrl());
         }
 
-        $host = explode('.' . config('app.domain'), $_SERVER['HTTP_HOST']);
+        if (SUBDOMAIN) {
+            $club = Cache::get('club.' . SUBDOMAIN) ?: Club::where('slug', SUBDOMAIN)->first()->toArray();
 
-//        if (str_contains($_SERVER['HTTP_HOST'], '.' . config('app.domain')) and $host[0]) {
-//            $club = Cache::get("club.{$host[0]}") ?: Club::where('slug', $host[0])->first()->toArray();
-//
-//            if ($club) {
-//                Cache::forever("club.{$host[0]}", $club);
+            if ($club) {
+                Cache::forever('club.' . SUBDOMAIN, $club);
 //                Cache::forever("club.{$club['id']}", $club);
-//                $this->data['clubTenant'] = $host[0];
-//            }
-//        }
+            }
+        }
 
         $this->form->fill();
     }

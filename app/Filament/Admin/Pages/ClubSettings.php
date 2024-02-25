@@ -80,7 +80,6 @@ class ClubSettings extends Page implements HasForms
 
             $data = auth()->user()->club->toArray();
 
-            Cache::forever("club." . auth()->user()->club_id, $data);
             Cache::forever("club." . $data['slug'], $data);
 
             Notification::make()
