@@ -5,10 +5,15 @@ namespace App\Filament\Admin\Resources;
 use App\Filament\Admin\Resources\CoachResource\Pages;
 use App\Filament\Admin\Resources\CoachResource\RelationManagers;
 use App\Models\Coach;
+use App\Models\Player;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -24,6 +29,15 @@ class CoachResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Section::make([
+                    SpatieMediaLibraryFileUpload::make('avatar')
+                        ->collection('avatars')
+                        ->conversion('thumb')
+                        ->imageEditor()
+                        ->image()
+                        ->imageEditorMode(2)
+                        ->imageEditorAspectRatios([
+                            '1:1',
+                        ]),
                     Forms\Components\TextInput::make('name')
                         ->required()
                         ->maxLength(50),
@@ -53,6 +67,10 @@ class CoachResource extends Resource
     {
         return $table
             ->columns([
+                SpatieMediaLibraryImageColumn::make('avatar')
+                    ->collection('avatars')
+                    ->conversion('thumb')
+                    ->height(40),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
