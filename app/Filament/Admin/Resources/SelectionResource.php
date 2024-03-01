@@ -49,21 +49,18 @@ class SelectionResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('coach_id')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('coach.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('category_id')
+                Tables\Columns\TextColumn::make('category.value')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('league_id')
+                Tables\Columns\TextColumn::make('league.value')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('color')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('club.name')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('color'),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
@@ -82,6 +79,7 @@ class SelectionResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()->requiresConfirmation()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

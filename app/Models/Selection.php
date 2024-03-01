@@ -14,7 +14,7 @@ class Selection extends Model
 
     public function coach()
     {
-        return $this->hasOne(Coach::class);
+        return $this->belongsTo(Coach::class);
     }
 
     public function category()
