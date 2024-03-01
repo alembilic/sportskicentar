@@ -14,8 +14,8 @@ if (str_contains($_SERVER['HTTP_HOST'], 'localhost')) {
 } else {
     $subdomain = (count($parts) >= 3) ? $parts[0] : null;
     $appUrl = $subdomain
-        ? "https://$subdomain." . config('app.domain')
-        : "https://" . config('app.domain');
+        ? "https://$subdomain." . getenv('APP_DOMAIN')
+        : "https://" . getenv('APP_DOMAIN');
 }
 
 define('SUBDOMAIN', $subdomain ?? '');
