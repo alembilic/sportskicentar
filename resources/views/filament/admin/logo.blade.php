@@ -19,7 +19,7 @@
         <div class="m-auto ml-3 flex text-xl font-bold leading-5 tracking-tight text-gray-950 dark:text-white">
             {{ cache()->get('club.' . auth()->user()->club_id)['name'] }}
         </div>
-    @else
+    @elseif(cache()->get('club.' . 1))
         <img src="{{ asset('storage/' . cache()->get('club.' . 1)['logo']) }}"
              alt="{{ cache()->get('club.' . 1)['name'] }}"
              class="logo-image-login"/>
