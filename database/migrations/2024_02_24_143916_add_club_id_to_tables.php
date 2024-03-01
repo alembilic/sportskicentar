@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('memberships', function (Blueprint $table) {
-            $table->foreignId('club_id')->nullable()->constrained();
-        });
+//        Schema::table('memberships', function (Blueprint $table) {
+//            $table->foreignId('club_id')->nullable()->constrained();
+//        });
 
         Schema::table('membership_types', function (Blueprint $table) {
             $table->foreignId('club_id')->nullable()->constrained();
