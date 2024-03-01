@@ -60,7 +60,7 @@ class SelectionResource extends Resource
                 Tables\Columns\TextColumn::make('league.value')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('color'),
+                Tables\Columns\ColorColumn::make('color'),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()

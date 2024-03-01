@@ -7,7 +7,11 @@ use App\Filament\Admin\Resources\CoachResource\RelationManagers;
 use App\Models\Coach;
 use App\Models\Player;
 use Filament\Forms;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\Split;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
@@ -28,16 +32,19 @@ class CoachResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make([
+                Section::make([
                     SpatieMediaLibraryFileUpload::make('avatar')
                         ->collection('avatars')
-                        ->conversion('thumb')
+                        ->imagePreviewHeight('400')
                         ->imageEditor()
                         ->image()
                         ->imageEditorMode(2)
                         ->imageEditorAspectRatios([
                             '1:1',
                         ]),
+                ])->columnSpan(1)->columns(1),
+
+                Section::make([
                     Forms\Components\TextInput::make('name')
                         ->required()
                         ->maxLength(50),
@@ -59,8 +66,8 @@ class CoachResource extends Resource
                         ->relationship('gearSize', 'value')
                         ->native(false)
                         ->required(),
-                ])->columns(2)
-            ]);
+                ])->columnSpan(2)->columns(2),
+            ])->columns(3);
     }
 
     public static function table(Table $table): Table
