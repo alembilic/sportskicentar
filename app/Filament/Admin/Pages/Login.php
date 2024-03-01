@@ -21,12 +21,9 @@ class Login extends \Filament\Pages\Auth\Login
         }
 
         if (SUBDOMAIN) {
-            $club = Cache::get('club.' . SUBDOMAIN) ?: Club::where('slug', SUBDOMAIN)->first()->toArray();
-
-            if ($club) {
-                Cache::forever('club.' . SUBDOMAIN, $club);
-//                Cache::forever("club.{$club['id']}", $club);
-            }
+            Cache::rememberForever('club.' . SUBDOMAIN,
+                fn() => Club::where('slug', SUBDOMAIN)->firstOrFail()->toArray()
+            );
         }
 
         $this->form->fill();
@@ -70,6 +67,8 @@ class Login extends \Filament\Pages\Auth\Login
         }
 
         session()->regenerate();
+
+        Cache::forever("club." . $user->club_id, Club::findOrFail($user->club_id)->toArray());
 
         return app(LoginResponse::class);
     }

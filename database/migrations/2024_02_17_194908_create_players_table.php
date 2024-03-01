@@ -16,6 +16,7 @@ return new class extends Migration
             $table->text('first_name');
             $table->text('last_name');
             $table->date('date_of_birth');
+            $table->integer('year_of_birth');
             $table->foreignId('membership_type_id')->constrained();
             $table->softDeletes();
             $table->timestamps();
