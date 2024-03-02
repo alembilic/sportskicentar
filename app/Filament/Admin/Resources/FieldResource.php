@@ -2,19 +2,13 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\CoachResource\Pages;
-use App\Filament\Admin\Resources\CoachResource\RelationManagers;
-use App\Models\Coach;
-use App\Models\Player;
+use App\Filament\Admin\Resources\FieldResource\Pages;
+use App\Filament\Admin\Resources\FieldResource\RelationManagers;
+use App\Models\Field;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Components\Split;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
@@ -22,9 +16,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class CoachResource extends Resource
+class FieldResource extends Resource
 {
-    protected static ?string $model = Coach::class;
+    protected static ?string $model = Field::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -38,34 +32,29 @@ class CoachResource extends Resource
                         ->imagePreviewHeight('400')
                         ->imageEditor()
                         ->image()
-                        ->imageEditorMode(2)
-                        ->imageEditorAspectRatios([
-                            '1:1',
-                        ]),
+                        ->imageEditorMode(2),
                 ])->columnSpan(1)->columns(1),
 
                 Section::make([
                     Forms\Components\TextInput::make('name')
                         ->required()
                         ->maxLength(50),
-                    Forms\Components\TextInput::make('surname')
-                        ->required()
-                        ->maxLength(50),
-                    Forms\Components\DatePicker::make('date_of_birth')
-                        ->required(),
-                    Forms\Components\TextInput::make('email')
-                        ->email()
-                        ->required()
-                        ->maxLength(50),
-                    Forms\Components\TextInput::make('phone_number')
-                        ->tel()
-                        ->maxLength(16),
                     Forms\Components\TextInput::make('address')
+                        ->required()
                         ->maxLength(50),
-                    Forms\Components\Select::make('gear_size')
-                        ->relationship('gearSize', 'value')
-                        ->native(false)
-                        ->required(),
+                    Forms\Components\TextInput::make('duration')
+                        ->required()
+                        ->numeric()
+                        ->maxValue(1000)
+                        ->prefix('minutes'),
+                    Forms\Components\TextInput::make('price_per_duration')
+                        ->numeric()
+                        ->required()
+                        ->maxValue(1000)
+                        ->prefix('KM'),
+                    Forms\Components\Textarea::make('description')
+                        ->maxLength(1000)
+                        ->columnSpan(2),
                 ])->columnSpan(2)->columns(2),
             ])->columns(3);
     }
@@ -81,21 +70,15 @@ class CoachResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('surname')
+                Tables\Columns\TextColumn::make('address')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('date_of_birth')
-                    ->date()
+                Tables\Columns\TextColumn::make('duration')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('email')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('phone_number')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('address')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('gearSize.value')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('price_per_duration')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('description')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
@@ -133,9 +116,9 @@ class CoachResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCoaches::route('/'),
-            'create' => Pages\CreateCoach::route('/create'),
-            'edit' => Pages\EditCoach::route('/{record}/edit'),
+            'index' => Pages\ListFields::route('/'),
+            'create' => Pages\CreateField::route('/create'),
+            'edit' => Pages\EditField::route('/{record}/edit'),
         ];
     }
 }
