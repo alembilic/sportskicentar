@@ -46,12 +46,12 @@ class FieldResource extends Resource
                         ->required()
                         ->numeric()
                         ->maxValue(1000)
-                        ->prefix('minutes'),
+                        ->suffix('minutes'),
                     Forms\Components\TextInput::make('price_per_duration')
                         ->numeric()
                         ->required()
                         ->maxValue(1000)
-                        ->prefix('KM'),
+                        ->suffix('KM'),
                     Forms\Components\Textarea::make('description')
                         ->maxLength(1000)
                         ->columnSpan(2),

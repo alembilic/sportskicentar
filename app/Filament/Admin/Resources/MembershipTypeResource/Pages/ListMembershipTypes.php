@@ -25,7 +25,7 @@ class ListMembershipTypes extends ListRecords
                         ->required()
                         ->numeric()
                         ->maxValue(1000)
-                        ->prefix('KM'),
+                        ->suffix('KM'),
                 ]),
         ];
     }

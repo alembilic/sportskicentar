@@ -45,13 +45,14 @@ class CoachResource extends Resource
                 ])->columnSpan(1)->columns(1),
 
                 Section::make([
-                    Forms\Components\TextInput::make('name')
+                    Forms\Components\TextInput::make('first_name')
                         ->required()
                         ->maxLength(50),
-                    Forms\Components\TextInput::make('surname')
+                    Forms\Components\TextInput::make('last_name')
                         ->required()
                         ->maxLength(50),
                     Forms\Components\DatePicker::make('date_of_birth')
+                        ->prefixIcon('heroicon-s-calendar-days')
                         ->required(),
                     Forms\Components\TextInput::make('email')
                         ->email()
@@ -78,10 +79,7 @@ class CoachResource extends Resource
                     ->collection('avatars')
                     ->conversion('thumb')
                     ->height(50),
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('surname')
+                Tables\Columns\TextColumn::make('full_name')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('date_of_birth')

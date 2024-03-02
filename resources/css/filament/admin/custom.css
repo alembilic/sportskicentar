@@ -1,9 +1,18 @@
 .fi-logo:has(> .logo-image-login) {
     height: 6rem !important;
-    width:auto;
+    width: auto;
 }
 
 .fi-logo:has(> .logo-image) {
     height: 2.5rem !important;
-    width:auto;
+    width: auto;
+}
+
+.no-border.ring-1 {
+    border: none !important;
+    box-shadow: none;
+}
+
+.no-border > .fi-section-content-ctn > .fi-section-content {
+    padding: 0!important;
 }

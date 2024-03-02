@@ -17,6 +17,10 @@ class Codebook extends Model
     const CATEGORY = 2;
     const LICENCE = 3;
     const GEAR_SIZE = 4;
+    const DOMINANT_LEG = 5;
+    const LEVEL_OF_EDUCATION = 6;
+    const EDUCATION_STATUS = 7;
+    const EDUCATION_INSTITUTION = 8;
 
     protected function codeType(): Attribute
     {
@@ -31,7 +35,11 @@ class Codebook extends Model
             self::LEAGUE => 'Liga',
             self::CATEGORY => 'Kategorija',
             self::LICENCE => 'Licenca',
-            self::GEAR_SIZE => 'Veličina opreme'
+            self::GEAR_SIZE => 'Veličina opreme',
+            self::DOMINANT_LEG => 'Dominantna noga',
+            self::LEVEL_OF_EDUCATION => 'Nivo obrazovanja',
+            self::EDUCATION_STATUS => 'Status obarazovanja',
+            self::EDUCATION_INSTITUTION => 'Institucija obarazovanja',
         ];
     }
 }

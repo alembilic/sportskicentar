@@ -30,7 +30,7 @@ class MembershipTypeResource extends Resource
                     ->required()
                     ->numeric()
                     ->maxValue(1000)
-                    ->prefix('KM'),
+                    ->suffix('KM'),
             ]);
     }
 

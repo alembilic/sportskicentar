@@ -31,7 +31,7 @@ class MembershipResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('player_id')
-                    ->relationship('player', 'first_name')
+                    ->relationship('player', 'full_name')
                     ->native(false)
                     ->required()
                     ->afterStateHydrated(function (Set $set, Get $get) {
@@ -47,11 +47,13 @@ class MembershipResource extends Resource
                         if ($player) {
                             $set('price', $player->membershipType->price);
                             $set('membership_type_id', $player->membershipType->id);
-                            $set('membership_type', $player->membershipType->name);
+                            $set('membership_type', $player->membershipType->full_name);
                         }
                     })
                     ->live(),
-                Forms\Components\DatePicker::make('valid_for')->native(false),
+                Forms\Components\DatePicker::make('valid_for')
+                    ->native(false)
+                    ->prefixIcon('heroicon-s-calendar-days'),
 
 //                Flatpickr::make('valid_for')
 //                    ->allowInput(false)
@@ -80,9 +82,8 @@ class MembershipResource extends Resource
                 Forms\Components\TextInput::make('price')
                     ->readOnly()
                     ->numeric()
-                    ->prefix('KM'),
-
-                Forms\Components\Toggle::make('paid'),
+                    ->suffix('KM'),
+                Forms\Components\Toggle::make('paid')->inline(false),
             ]);
     }
 
@@ -90,7 +91,7 @@ class MembershipResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('player.first_name')
+                Tables\Columns\TextColumn::make('player.full_name')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('membershipType.name')
                     ->sortable(),

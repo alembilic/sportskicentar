@@ -28,7 +28,7 @@ class SelectionResource extends Resource
                         ->required()
                         ->maxLength(191),
                     Forms\Components\Select::make('coach_id')
-                        ->relationship('coach', 'name')
+                        ->relationship('coach', 'full_name')
                         ->native(false)
                         ->required(),
                     Forms\Components\Select::make('category_id')
