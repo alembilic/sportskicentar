@@ -10,13 +10,13 @@ return new class extends Migration {
      */
     public function up(): void
     {
-//        Schema::table('players', function (Blueprint $table) {
-//            $table->string('full_name')->virtualAs("CONCAT(first_name, ' ', last_name)");
-//        });
-//
-//        Schema::table('membership_types', function (Blueprint $table) {
-//            $table->string('full_name')->virtualAs("CONCAT(name, ' - ', price, 'KM')");
-//        });
+        Schema::table('players', function (Blueprint $table) {
+            $table->string('full_name')->virtualAs("CONCAT(first_name, ' ', last_name)");
+        });
+
+        Schema::table('membership_types', function (Blueprint $table) {
+            $table->string('full_name')->virtualAs("CONCAT(name, ' - ', price, 'KM')");
+        });
 
         Schema::table('coaches', function (Blueprint $table) {
             $table->string('full_name')->virtualAs("CONCAT(first_name, ' ', last_name)");
