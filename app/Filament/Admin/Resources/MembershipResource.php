@@ -18,6 +18,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class MembershipResource extends Resource
@@ -31,8 +32,11 @@ class MembershipResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('player_id')
+                    ->prefixIcon('heroicon-s-user')
                     ->relationship('player', 'full_name')
                     ->native(false)
+                    ->searchable()
+                    ->preload()
                     ->required()
                     ->afterStateHydrated(function (Set $set, Get $get) {
                         $player = Player::with('membershipType')->where('id', $get('player_id'))->first();
@@ -47,12 +51,12 @@ class MembershipResource extends Resource
                         if ($player) {
                             $set('price', $player->membershipType->price);
                             $set('membership_type_id', $player->membershipType->id);
-                            $set('membership_type', $player->membershipType->full_name);
                         }
                     })
                     ->live(),
                 Forms\Components\DatePicker::make('valid_for')
                     ->native(false)
+                    ->required()
                     ->prefixIcon('heroicon-s-calendar-days'),
 
 //                Flatpickr::make('valid_for')
@@ -75,14 +79,12 @@ class MembershipResource extends Resource
 //                        },
 //                    ])
 //                    ->maxDate(Carbon::now()->addMonth()),
-                Forms\Components\TextInput::make('membership_type')
-                    ->readOnly()
-                    ->disabled(),
-                Forms\Components\Hidden::make('membership_type_id'),
-                Forms\Components\TextInput::make('price')
-                    ->readOnly()
-                    ->numeric()
-                    ->suffix('KM'),
+
+                Forms\Components\Select::make('membership_type_id')
+                    ->prefixIcon('heroicon-s-currency-dollar')
+                    ->relationship('membershipType', 'full_name')
+                    ->native(false)
+                    ->required(),
                 Forms\Components\Toggle::make('paid')->inline(false),
             ]);
     }
@@ -93,9 +95,9 @@ class MembershipResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('player.full_name')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('membershipType.name')
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('valid_for')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('membershipType.name')
                     ->sortable(),
                 Tables\Columns\IconColumn::make('paid')
                     ->boolean()

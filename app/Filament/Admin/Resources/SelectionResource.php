@@ -30,6 +30,8 @@ class SelectionResource extends Resource
                     Forms\Components\Select::make('coach_id')
                         ->relationship('coach', 'full_name')
                         ->native(false)
+                        ->searchable()
+                        ->preload()
                         ->required(),
                     Forms\Components\Select::make('category_id')
                         ->relationship('category', 'value')
