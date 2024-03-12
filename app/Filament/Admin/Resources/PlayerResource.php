@@ -165,7 +165,7 @@ class PlayerResource extends Resource
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('date_of_birth')
-                    ->dateTime('d.m.Y')
+                    ->dateTime()
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('membershipType.full_name')

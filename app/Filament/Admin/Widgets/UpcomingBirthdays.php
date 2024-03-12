@@ -36,7 +36,7 @@ class UpcomingBirthdays extends BaseWidget
                 Tables\Columns\TextColumn::make('first_name'),
                 Tables\Columns\TextColumn::make('last_name'),
                 Tables\Columns\TextColumn::make('date_of_birth')
-                    ->dateTime('d.m.Y'),
+                    ->date(),
                 Tables\Columns\TextColumn::make('days_until_birthday'),
             ]);
     }

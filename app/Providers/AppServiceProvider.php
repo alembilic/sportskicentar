@@ -3,7 +3,11 @@
 namespace App\Providers;
 
 use Filament\Actions\Action;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
 use Filament\Resources\Resource;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Filament\Forms\Components\Field;
@@ -28,6 +32,16 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
         $this->autoTranslateLabels();
+        Table::configureUsing(function (Table $table): void {
+            Table::$defaultDateDisplayFormat = 'd.m.Y';
+            Table::$defaultDateTimeDisplayFormat = 'd.m.Y H:i:s';
+        });
+        Select::configureUsing(function (Select $select): void {
+            $select->native(false);
+        });
+        DatePicker::configureUsing(function (Select $select): void {
+            $select->native(false);
+        });
     }
 
     private function autoTranslateLabels()

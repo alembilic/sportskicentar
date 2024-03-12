@@ -4,16 +4,16 @@ return [
 
     'single' => [
 
-        'label' => 'Uredite',
+        'label' => 'Uredi',
 
         'modal' => [
 
-            'heading' => 'Uredite :label',
+            'heading' => 'Uredi :label',
 
             'actions' => [
 
                 'save' => [
-                    'label' => 'Sačuvajte',
+                    'label' => 'Sačuvaj',
                 ],
 
             ],

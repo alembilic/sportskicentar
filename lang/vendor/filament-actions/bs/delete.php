@@ -4,7 +4,7 @@ return [
 
     'single' => [
 
-        'label' => 'Izbrišite',
+        'label' => 'Izbriši',
 
         'modal' => [
 
@@ -13,7 +13,7 @@ return [
             'actions' => [
 
                 'delete' => [
-                    'label' => 'Izbrišiti',
+                    'label' => 'Izbriši',
                 ],
 
             ],
