@@ -25,8 +25,11 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class CoachResource extends Resource
 {
     protected static ?string $model = Coach::class;
+    public static ?string $label = 'Trenera';
+    public static ?string $breadcrumb = 'Trener';
+    public static ?string $pluralModelLabel = 'Treneri';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-users';
 
     public static function form(Form $form): Form
     {

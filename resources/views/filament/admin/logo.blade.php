@@ -12,7 +12,7 @@
              class="logo-image-login"/>
     @endif
 @else
-    @if(auth()->user())
+    @if(auth()->user() and cache()->get('club.' . auth()->user()->club_id))
         <img src="{{ asset('storage/' . cache()->get('club.' . auth()->user()->club_id)['logo']) }}"
              alt="{{ cache()->get('club.' . auth()->user()->club_id)['name'] }}"
              class="logo-image"/>

@@ -24,8 +24,11 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class MembershipResource extends Resource
 {
     protected static ?string $model = Membership::class;
+    public static ?string $label = 'Članarinu';
+    public static ?string $breadcrumb = 'Članarina';
+    public static ?string $pluralModelLabel = 'Članarine';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'tabler-report-money';
 
     public static function form(Form $form): Form
     {

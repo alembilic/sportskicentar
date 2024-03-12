@@ -6,6 +6,7 @@ use App\Filament\Admin\Pages\Login;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\MenuItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -33,9 +34,12 @@ class AdminPanelProvider extends PanelProvider
             ->login(Login::class)
             ->passwordReset()
             ->emailVerification()
-            ->profile()
             ->colors([
                 'primary' => Color::Indigo,
+            ])
+            ->profile()
+            ->userMenuItems([
+                'profile' => MenuItem::make()->label('Profil'),
             ])
             ->brandLogo(fn() => view('filament.admin.logo'))
             ->viteTheme('resources/css/filament/admin/theme.css')

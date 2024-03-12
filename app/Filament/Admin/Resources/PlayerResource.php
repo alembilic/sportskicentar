@@ -22,8 +22,11 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class PlayerResource extends Resource
 {
     protected static ?string $model = Player::class;
+    public static ?string $label = 'Igrača';
+    public static ?string $breadcrumb = 'Igrač';
+    public static ?string $pluralModelLabel = 'Igrači';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     public static function form(Form $form): Form
     {
@@ -239,6 +242,7 @@ class PlayerResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()->requiresConfirmation()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

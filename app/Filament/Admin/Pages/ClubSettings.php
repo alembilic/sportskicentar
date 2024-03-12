@@ -25,8 +25,12 @@ class ClubSettings extends Page implements HasForms
 
     public ?array $data = [];
     public Club $club_model;
+    protected static ?string $title = 'Postavke Kluba';
+    public static ?string $navigationLabel = 'Postavke Kluba';
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $navigationGroup = 'Postavke';
+
+    protected static ?string $navigationIcon = 'heroicon-s-cog-6-tooth';
 
     protected static string $view = 'filament.admin.pages.club-settings';
 

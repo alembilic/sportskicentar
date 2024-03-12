@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 
 class UpcomingBirthdays extends BaseWidget
 {
+    protected static ?string $heading = "Nadolazeći rođendani";
+
     public function table(Table $table): Table
     {
         return $table

@@ -16,8 +16,13 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class SelectionResource extends Resource
 {
     protected static ?string $model = Selection::class;
+    public static ?string $label = 'Selekciju';
+    public static ?string $breadcrumb = 'Selekcija';
+    public static ?string $pluralModelLabel = 'Selekcije';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Postavke';
+
+//    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {

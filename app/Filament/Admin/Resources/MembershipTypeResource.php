@@ -16,8 +16,13 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class MembershipTypeResource extends Resource
 {
     protected static ?string $model = MembershipType::class;
+    public static ?string $label = 'Vrstu članarine';
+    public static ?string $breadcrumb = 'Vrste članarina';
+    public static ?string $pluralModelLabel = 'Vrste članarina';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Postavke';
+
+//    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
@@ -61,8 +66,7 @@ class MembershipTypeResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
-                    ->requiresConfirmation()
+                Tables\Actions\DeleteAction::make()->requiresConfirmation()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -19,8 +19,11 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class FieldResource extends Resource
 {
     protected static ?string $model = Field::class;
+    public static ?string $label = 'Teren';
+    public static ?string $breadcrumb = 'Teren';
+    public static ?string $pluralModelLabel = 'Tereni';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'tabler-soccer-field';
 
     public static function form(Form $form): Form
     {

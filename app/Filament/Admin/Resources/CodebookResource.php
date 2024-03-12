@@ -17,8 +17,14 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class CodebookResource extends Resource
 {
     protected static ?string $model = Codebook::class;
+    public static ?string $label = 'Šifrarnik';
+    public static ?string $breadcrumb = 'Šifrarnik';
+    public static ?string $pluralModelLabel = 'Šifrarnici';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Postavke';
+
+
+    protected static ?string $navigationIcon = 'heroicon-c-list-bullet';
 
     public static function form(Form $form): Form
     {
