@@ -39,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
         Select::configureUsing(function (Select $select): void {
             $select->native(false);
         });
-        DatePicker::configureUsing(function (Select $select): void {
+        DatePicker::configureUsing(function (DatePicker $select): void {
             $select->native(false);
         });
     }
