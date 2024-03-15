@@ -7,6 +7,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\MenuItem;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -40,6 +41,12 @@ class AdminPanelProvider extends PanelProvider
             ->profile()
             ->userMenuItems([
                 'profile' => MenuItem::make()->label('Profil'),
+            ])
+            ->navigationGroups([
+                NavigationGroup::make()
+                    ->label('Treneri'),
+                NavigationGroup::make()
+                    ->label('Postavke'),
             ])
             ->brandLogo(fn() => view('filament.admin.logo'))
             ->viteTheme('resources/css/filament/admin/theme.css')

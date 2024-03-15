@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\PlayerResource\Pages;
 use App\Filament\Admin\Resources\PlayerResource\RelationManagers;
+use App\Models\Codebook;
 use App\Models\Player;
 use Coolsam\FilamentFlatpickr\Forms\Components\Flatpickr;
 use Filament\Forms;
@@ -54,21 +55,23 @@ class PlayerResource extends Resource
                                     Forms\Components\TextInput::make('first_name')->required()->maxLength(50),
                                     Forms\Components\TextInput::make('last_name')->required()->maxLength(50),
                                     DatePicker::make('date_of_birth')
-                                        ->native(false)
                                         ->required()
                                         ->prefixIcon('heroicon-s-calendar-days')
                                         ->maxDate(today()),
                                     Forms\Components\Select::make('membership_type_id')
                                         ->relationship('membershipType', 'full_name')
-                                        ->required()
-                                        ->native(false),
+                                        ->required(),
                                     Forms\Components\Select::make('selection_id')
                                         ->relationship('selection', 'name')
-                                        ->required()
-                                        ->native(false),
+                                        ->required(),
                                     Forms\Components\Select::make('gear_size')
                                         ->relationship('gearSize', 'value')
-                                        ->native(false),
+                                        ->createOptionForm([
+                                            Forms\Components\TextInput::make('value')
+                                                ->required(),
+                                            Forms\Components\Hidden::make('code_type')
+                                                ->default(Codebook::GEAR_SIZE)
+                                        ]),
                                 ])
                                     ->extraAttributes(['class' => 'no-border'])
                                     ->columnSpan(2)->columns(),
@@ -92,7 +95,12 @@ class PlayerResource extends Resource
                                     ->maxValue(100),
                                 Forms\Components\Select::make('dominant_leg')
                                     ->relationship('dominantLeg', 'value')
-                                    ->native(false),
+                                    ->createOptionForm([
+                                        Forms\Components\TextInput::make('value')
+                                            ->required(),
+                                        Forms\Components\Hidden::make('code_type')
+                                            ->default(Codebook::DOMINANT_LEG)
+                                    ]),
 
                                 Forms\Components\DatePicker::make('date_joined')
                                     ->maxDate(today())
@@ -102,7 +110,8 @@ class PlayerResource extends Resource
                                     ->native(false)
                                     ->prefixIcon('heroicon-s-calendar-days'),
                                 Forms\Components\Toggle::make('is_captain')
-                                    ->inline(false)->columnSpan(2),
+                                    ->inline(false)
+                                    ->columnSpan(2),
 
                                 Forms\Components\TextInput::make('place_of_birth')
                                     ->maxLength(50),
@@ -138,13 +147,28 @@ class PlayerResource extends Resource
                             ->schema([
                                 Forms\Components\Select::make('level_of_education')
                                     ->relationship('educationLevel', 'value')
-                                    ->native(false),
+                                    ->createOptionForm([
+                                        Forms\Components\TextInput::make('value')
+                                            ->required(),
+                                        Forms\Components\Hidden::make('code_type')
+                                            ->default(Codebook::LEVEL_OF_EDUCATION)
+                                    ]),
                                 Forms\Components\Select::make('education_institution')
                                     ->relationship('educationInstitution', 'value')
-                                    ->native(false),
+                                    ->createOptionForm([
+                                        Forms\Components\TextInput::make('value')
+                                            ->required(),
+                                        Forms\Components\Hidden::make('code_type')
+                                            ->default(Codebook::EDUCATION_INSTITUTION)
+                                    ]),
                                 Forms\Components\Select::make('education_status')
                                     ->relationship('educationStatus', 'value')
-                                    ->native(false),
+                                    ->createOptionForm([
+                                        Forms\Components\TextInput::make('value')
+                                            ->required(),
+                                        Forms\Components\Hidden::make('code_type')
+                                            ->default(Codebook::EDUCATION_STATUS)
+                                    ]),
                             ])->columns(),
                         Tabs\Tab::make(__('Health'))
                             ->schema([

@@ -5,10 +5,11 @@ namespace App\Models;
 use App\Models\Traits\HasClub;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Selection extends Model
 {
-    use HasFactory, HasClub;
+    use HasFactory, HasClub, SoftDeletes;
 
     protected $guarded = ['id'];
 

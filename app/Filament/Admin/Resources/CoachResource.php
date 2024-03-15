@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Filament\Admin\Resources\CoachResource\Pages;
 use App\Filament\Admin\Resources\CoachResource\RelationManagers;
 use App\Models\Coach;
+use App\Models\Codebook;
 use App\Models\Player;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
@@ -28,6 +29,8 @@ class CoachResource extends Resource
     public static ?string $label = 'Trenera';
     public static ?string $breadcrumb = 'Trener';
     public static ?string $pluralModelLabel = 'Treneri';
+
+    protected static ?string $navigationGroup = 'Treneri';
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
@@ -68,7 +71,12 @@ class CoachResource extends Resource
                         ->maxLength(50),
                     Forms\Components\Select::make('gear_size')
                         ->relationship('gearSize', 'value')
-                        ->native(false)
+                        ->createOptionForm([
+                            Forms\Components\TextInput::make('value')
+                                ->required(),
+                            Forms\Components\Hidden::make('code_type')
+                                ->default(Codebook::GEAR_SIZE)
+                        ])
                         ->required(),
                 ])->columnSpan(2)->columns(2),
             ])->columns(3);
@@ -95,7 +103,6 @@ class CoachResource extends Resource
                 Tables\Columns\TextColumn::make('address')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('gearSize.value')
-                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()

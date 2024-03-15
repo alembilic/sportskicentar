@@ -21,6 +21,7 @@ class Codebook extends Model
     const LEVEL_OF_EDUCATION = 6;
     const EDUCATION_STATUS = 7;
     const EDUCATION_INSTITUTION = 8;
+    const TEST_TYPE = 8;
 
     protected function codeType(): Attribute
     {
@@ -40,6 +41,7 @@ class Codebook extends Model
             self::LEVEL_OF_EDUCATION => 'Nivo obrazovanja',
             self::EDUCATION_STATUS => 'Status obarazovanja',
             self::EDUCATION_INSTITUTION => 'Institucija obarazovanja',
+            self::TEST_TYPE => 'Naziv testa',
         ];
     }
 }

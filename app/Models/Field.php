@@ -5,13 +5,14 @@ namespace App\Models;
 use App\Models\Traits\HasClub;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Field extends Model implements HasMedia
 {
-    use HasFactory, HasClub, InteractsWithMedia;
+    use HasFactory, HasClub, InteractsWithMedia, SoftDeletes;
 
     protected $guarded = ['id'];
 

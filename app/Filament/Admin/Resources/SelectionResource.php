@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\SelectionResource\Pages;
 use App\Filament\Admin\Resources\SelectionResource\RelationManagers;
+use App\Models\Codebook;
 use App\Models\Selection;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -40,11 +41,21 @@ class SelectionResource extends Resource
                         ->required(),
                     Forms\Components\Select::make('category_id')
                         ->relationship('category', 'value')
-                        ->native(false)
+                        ->createOptionForm([
+                            Forms\Components\TextInput::make('value')
+                                ->required(),
+                            Forms\Components\Hidden::make('code_type')
+                                ->default(Codebook::CATEGORY)
+                        ])
                         ->required(),
                     Forms\Components\Select::make('league_id')
                         ->relationship('league', 'value')
-                        ->native(false)
+                        ->createOptionForm([
+                            Forms\Components\TextInput::make('value')
+                                ->required(),
+                            Forms\Components\Hidden::make('code_type')
+                                ->default(Codebook::LEAGUE)
+                        ])
                         ->required(),
                     Forms\Components\ColorPicker::make('color'),
                 ])->columns()
