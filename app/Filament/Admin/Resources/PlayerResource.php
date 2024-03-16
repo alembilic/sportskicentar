@@ -15,6 +15,7 @@ use Filament\Forms\Components\Tabs;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -56,7 +57,6 @@ class PlayerResource extends Resource
                                     Forms\Components\TextInput::make('last_name')->required()->maxLength(50),
                                     DatePicker::make('date_of_birth')
                                         ->required()
-                                        ->prefixIcon('heroicon-s-calendar-days')
                                         ->maxDate(today()),
                                     Forms\Components\Select::make('membership_type_id')
                                         ->relationship('membershipType', 'full_name')
@@ -103,12 +103,8 @@ class PlayerResource extends Resource
                                     ]),
 
                                 Forms\Components\DatePicker::make('date_joined')
-                                    ->maxDate(today())
-                                    ->native(false)
-                                    ->prefixIcon('heroicon-s-calendar-days'),
-                                Forms\Components\DatePicker::make('date_left')
-                                    ->native(false)
-                                    ->prefixIcon('heroicon-s-calendar-days'),
+                                    ->maxDate(today()),
+                                Forms\Components\DatePicker::make('date_left'),
                                 Forms\Components\Toggle::make('is_captain')
                                     ->inline(false)
                                     ->columnSpan(2),
@@ -185,6 +181,10 @@ class PlayerResource extends Resource
     {
         return $table
             ->columns([
+                SpatieMediaLibraryImageColumn::make('avatar')
+                    ->collection('avatars')
+                    ->conversion('thumb')
+                    ->height(50),
                 Tables\Columns\TextColumn::make('full_name')
                     ->searchable()
                     ->sortable(),

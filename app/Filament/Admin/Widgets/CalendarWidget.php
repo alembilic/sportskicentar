@@ -4,6 +4,8 @@ namespace App\Filament\Admin\Widgets;
 
 use App\Models\Reservation;
 use Carbon\Carbon;
+use Closure;
+use Saade\FilamentFullCalendar\Actions;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Hidden;
@@ -16,8 +18,9 @@ use Saade\FilamentFullCalendar\Widgets\FullCalendarWidget;
 class CalendarWidget extends FullCalendarWidget
 {
     public string|null|\Illuminate\Database\Eloquent\Model $model = Reservation::class;
-    public $field;
-    public $duration;
+    public int $field;
+    public int $duration;
+    public string $fieldName;
 
     public function fetchEvents(array $fetchInfo): array
     {
@@ -50,8 +53,28 @@ class CalendarWidget extends FullCalendarWidget
                         ->afterStateUpdated(function (Set $set, Get $get) {
                             $set('end', Carbon::create($get('start'))->addMinutes($this->duration)->format('Y-m-d H:i:s'));
                         })
-                        ->live(),
+                        ->required()
+                        ->prefixIcon('heroicon-s-calendar-days')
+                        ->displayFormat('d. F Y H:i')
+                        ->seconds(false)
+                        ->minutesStep(15)
+                        ->native(false)
+                        ->rules([
+                            function (\Filament\Forms\Get $get) {
+                                return function (string $attribute, $value, Closure $fail) use ($get) {
+                                    $reservation = Reservation::isAvailable(Carbon::make($get('start')), Carbon::create($get('start'))->addMinutes($this->duration))
+                                        ->where('field_id', $this->field)
+                                        ->first();
+                                    if ($reservation) $fail('Postoji termin u odabrano vrijeme.');
+                                };
+                            },
+                        ])
+                        ->live(debounce: 1500),
                     DateTimePicker::make('end')
+                        ->prefixIcon('heroicon-s-calendar-days')
+                        ->displayFormat('d. F Y H:i')
+                        ->seconds(false)
+                        ->native(false)
                         ->readOnly(),
                     Hidden::make('field_id')
                         ->default($this->field)
@@ -59,6 +82,20 @@ class CalendarWidget extends FullCalendarWidget
 
             Textarea::make('notes'),
         ];
+    }
+
+    protected function headerActions(): array
+    {
+        return [
+            Actions\CreateAction::make()
+                ->modalHeading('Dodaj rezervaciju za ' . $this->fieldName)
+        ];
+    }
+
+    protected function viewAction(): \Filament\Actions\Action
+    {
+        return Actions\EditAction::make()
+            ->modalHeading('Uredi rezervaciju za ' . $this->fieldName);
     }
 
     public static function canView(): bool

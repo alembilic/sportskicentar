@@ -40,7 +40,7 @@ class AppServiceProvider extends ServiceProvider
             $select->native(false);
         });
         DatePicker::configureUsing(function (DatePicker $select): void {
-            $select->native(false);
+            $select->native(false)->prefixIcon('heroicon-s-calendar-days');
         });
     }
 

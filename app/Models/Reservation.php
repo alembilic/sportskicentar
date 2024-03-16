@@ -11,4 +11,17 @@ class Reservation extends Model
     use HasFactory, HasClub;
 
     protected $guarded = ['id'];
+
+    public function scopeIsAvailable($query, $start, $end)
+    {
+        return $query->where(function ($query) use ($start, $end) {
+            $query->where(function ($query) use ($start, $end) {
+                $query->where('start', '>=', $start)
+                    ->where('start', '<', $end);
+            })->orWhere(function ($query) use ($start, $end) {
+                $query->where('end', '>', $start)
+                    ->where('end', '<=', $end);
+            });
+        });
+    }
 }

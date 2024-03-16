@@ -11,6 +11,8 @@ use Carbon\Carbon;
 use Closure;
 use Coolsam\FilamentFlatpickr\Forms\Components\Flatpickr;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ViewField;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
@@ -57,31 +59,23 @@ class MembershipResource extends Resource
                         }
                     })
                     ->live(),
-                Forms\Components\DatePicker::make('valid_for')
-                    ->native(false)
+                TextInput::make('valid_for')
                     ->required()
-                    ->prefixIcon('heroicon-s-calendar-days'),
+                    ->default(Carbon::now()->format('Y-m'))
+                    ->rules([
+                        function (\Filament\Forms\Get $get) {
+                            return function (string $attribute, $value, Closure $fail) use ($get) {
+                                $membership = Membership::where('player_id', $get('player_id'))
+                                    ->where('valid_for', Carbon::make($value)->firstOfMonth()->format('Y-m-d'))
+                                    ->first();
 
-//                Flatpickr::make('valid_for')
-//                    ->allowInput(false)
-//                    ->monthSelect()
-//                    ->dateFormat('Y-m-d')
-//                    ->default(Carbon::now()->toISOString())
-//                    ->required()
-//                    ->rules([
-//                        function (\Filament\Forms\Get $get) {
-//                            return function (string $attribute, $value, Closure $fail) use ($get) {
-//                                $membership = Membership::where('player_id', $get('player_id'))
-//                                    ->where('valid_for', Carbon::make($value)->firstOfMonth()->format('Y-m-d'))
-//                                    ->first();
-//
-//                                if ($membership) {
-//                                    $fail('Record with this value exists.');
-//                                }
-//                            };
-//                        },
-//                    ])
-//                    ->maxDate(Carbon::now()->addMonth()),
+                                if ($membership) {
+                                    $fail('Članarina za ovaj mjesec postoji.');
+                                }
+                            };
+                        },
+                    ])
+                    ->type('month'),
 
                 Forms\Components\Select::make('membership_type_id')
                     ->prefixIcon('heroicon-s-currency-dollar')
@@ -99,6 +93,9 @@ class MembershipResource extends Resource
                 Tables\Columns\TextColumn::make('player.full_name')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('valid_for')
+                    ->getStateUsing(function (Model $record) {
+                        return ucfirst(Carbon::make($record->valid_for)->translatedFormat('F Y'));
+                    })
                     ->sortable(),
                 Tables\Columns\TextColumn::make('membershipType.name')
                     ->sortable(),

@@ -58,7 +58,6 @@ class CoachResource extends Resource
                         ->required()
                         ->maxLength(50),
                     Forms\Components\DatePicker::make('date_of_birth')
-                        ->prefixIcon('heroicon-s-calendar-days')
                         ->required(),
                     Forms\Components\TextInput::make('email')
                         ->email()

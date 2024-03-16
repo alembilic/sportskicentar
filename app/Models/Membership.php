@@ -18,7 +18,7 @@ class Membership extends Model
     protected function validFor(): Attribute
     {
         return Attribute::make(
-            get: fn(string $value) => Carbon::make($value)->format('F Y'),
+            get: fn(string $value) => Carbon::make($value)->format('Y-m'),
             set: fn(string $value) => Carbon::make($value),
         );
     }
