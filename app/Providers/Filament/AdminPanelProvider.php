@@ -20,6 +20,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Saade\FilamentFullCalendar\FilamentFullCalendarPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -68,6 +69,35 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->unsavedChangesAlerts(false)
+            ->plugin(FilamentFullCalendarPlugin::make()
+                ->plugins(['timeGrid', 'dayGrid', 'interaction', 'moment'], false)
+                ->editable(true)
+                ->locale('en')
+                ->config([
+                    'headerToolbar' => [
+                        'left' => 'prev,today,next',
+                        'center' => 'title',
+                        'right' => 'dayGridMonth,timeGridWeek'
+                    ],
+                    'businessHours' => [
+                        'daysOfWeek' => [0, 1, 2, 3, 4, 5, 6],
+                        'startTime' => '08:00',
+                        'endTime' => '22:00',
+                    ],
+                    'views' => [
+                        'timeGridWeek' => [
+                            'titleFormat' => 'D. MM. YYYY',
+                            'dayHeaderFormat' => 'D'
+                        ],
+                        'dayGridMonth' => [
+                            'titleFormat' => 'MM. YYYY',
+                            'dayHeaderFormat' => 'ddd'
+                        ]
+                    ],
+                    'allDaySlot' => false,
+                    'locale' => 'bs'
+                ])
+            )
             ->spa();
     }
 }
