@@ -6,20 +6,26 @@ use App\Filament\Admin\Resources\PlayerResource\Pages;
 use App\Filament\Admin\Resources\PlayerResource\RelationManagers;
 use App\Models\Codebook;
 use App\Models\Player;
+use Carbon\Carbon;
 use Coolsam\FilamentFlatpickr\Forms\Components\Flatpickr;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Tabs;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 
 class PlayerResource extends Resource
 {
@@ -231,20 +237,26 @@ class PlayerResource extends Resource
 //                    ->boolean(),
 //                Tables\Columns\IconColumn::make('is_foreigner')
 //                    ->boolean(),
-//                Tables\Columns\TextColumn::make('place_of_birth')
-//                    ->searchable(),
-//                Tables\Columns\TextColumn::make('jmb')
-//                    ->searchable(),
-//                Tables\Columns\TextColumn::make('address')
-//                    ->searchable(),
-//                Tables\Columns\TextColumn::make('email')
-//                    ->searchable(),
-//                Tables\Columns\TextColumn::make('phone_number')
-//                    ->searchable(),
+                Tables\Columns\TextColumn::make('place_of_birth')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('jmb')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('address')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('email')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('phone_number')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->searchable(),
 //                Tables\Columns\TextColumn::make('phone_number_secondary')
 //                    ->searchable(),
-//                Tables\Columns\IconColumn::make('is_sick')
-//                    ->boolean(),
+                Tables\Columns\IconColumn::make('is_sick')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->boolean(),
 //                Tables\Columns\TextColumn::make('dominant_leg')
 //                    ->numeric()
 //                    ->sortable(),
@@ -262,7 +274,25 @@ class PlayerResource extends Resource
 //                    ->sortable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('Slekcija')
+                    ->relationship('selection', 'name'),
+                SelectFilter::make('Trener')
+                    ->relationship('selection.coach', 'full_name'),
+                SelectFilter::make('Članarina')
+                    ->relationship('membershipType', 'name'),
+                TernaryFilter::make('Plaćeno')
+                    ->queries(
+                        true: fn(Builder $query) => $query->whereHas('memberships', fn($q) => $q->where('paid', 1)),
+                        false: fn(Builder $query) => $query->whereDoesntHave('memberships', fn($q) => $q->where('paid', 0)),
+                        blank: fn(Builder $query) => $query,
+                    ),
+                Filter::make('is_featured')
+                    ->form([TextInput::make('month')->label('Članarina za')->type('month')])
+                    ->query(fn(Builder $query, array $data): Builder => $query->when(isset($data['month']), function ($q) use ($data) {
+                        $q->whereHas('memberships', fn($q) => $q->where('valid_for', Carbon::make($data['month'])));
+                    })),
+                DateRangeFilter::make('date_of_birth'),
+                TernaryFilter::make('is_sick'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

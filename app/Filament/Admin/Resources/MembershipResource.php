@@ -18,6 +18,9 @@ use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -101,10 +104,12 @@ class MembershipResource extends Resource
                     ->sortable(),
                 Tables\Columns\IconColumn::make('paid')
                     ->boolean()
-                    ->sortable(),
+                    ->sortable()
+                    ->summarize(Tables\Columns\Summarizers\Count::make()->query(fn ($query) => $query->where('paid', true))),
                 Tables\Columns\TextColumn::make('price')
                     ->money('BAM')
-                    ->sortable(),
+                    ->sortable()
+                    ->summarize(Tables\Columns\Summarizers\Sum::make()->query(fn ($query) => $query->where('paid', true))),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
@@ -119,7 +124,19 @@ class MembershipResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Filter::make('is_featured')
+                    ->form([TextInput::make('month')->label('Članarina za')->type('month')])
+                    ->query(fn(Builder $query, array $data): Builder => $query->when(isset($data['month']), function ($q) use ($data) {
+                        $q->where('valid_for', Carbon::make($data['month']));
+                    })),
+                TernaryFilter::make('Plaćeno')
+                    ->queries(
+                        true: fn(Builder $query) => $query->where('paid', 1),
+                        false: fn(Builder $query) => $query->where('paid', 0),
+                        blank: fn(Builder $query) => $query,
+                    ),
+                SelectFilter::make('Članarina')
+                    ->relationship('player.membershipType', 'name'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

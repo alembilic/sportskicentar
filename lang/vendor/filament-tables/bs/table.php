@@ -10,6 +10,34 @@ return [
 
     ],
 
+    'summary' => [
+
+        'heading' => 'Statistika',
+
+        'subheadings' => [
+            'all' => 'Svi :label',
+            'group' => ':group statistika',
+            'page' => 'Na stranici',
+        ],
+
+        'summarizers' => [
+
+            'average' => [
+                'label' => 'Prosjek',
+            ],
+
+            'count' => [
+                'label' => 'Ukupno',
+            ],
+
+            'sum' => [
+                'label' => 'Suma',
+            ],
+
+        ],
+
+    ],
+
     'fields' => [
 
         'bulk_select_page' => [
