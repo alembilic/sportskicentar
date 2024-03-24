@@ -22,6 +22,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -186,6 +187,7 @@ class PlayerResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query) => $query->withCount('pastThreeMemberships'))
             ->columns([
                 SpatieMediaLibraryImageColumn::make('avatar')
                     ->collection('avatars')
@@ -193,13 +195,18 @@ class PlayerResource extends Resource
                     ->height(50),
                 Tables\Columns\TextColumn::make('full_name')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->formatStateUsing(fn (Model $record): View => view(
+                        'filament.tables.columns.username',
+                        ['state' => $record],
+                    )),
                 Tables\Columns\TextColumn::make('date_of_birth')
                     ->date()
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('membershipType.full_name')
                     ->searchable()
+                    ->badge()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('selection.name')
                     ->searchable()

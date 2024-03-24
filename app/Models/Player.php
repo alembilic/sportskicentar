@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\HasClub;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,13 +18,6 @@ class Player extends Model implements HasMedia
     use HasFactory, SoftDeletes, HasClub, InteractsWithMedia;
 
     protected $guarded = ['id'];
-
-    protected function fullName(): Attribute
-    {
-        return Attribute::make(
-            get: fn() => $this->first_name . ' ' . $this->last_name,
-        );
-    }
 
     public function membershipType()
     {
@@ -82,5 +76,12 @@ class Player extends Model implements HasMedia
         $this->addMediaConversion('thumb')
             ->width(80)
             ->height(80);
+    }
+
+    public function pastThreeMemberships()
+    {
+        return $this->hasMany(Membership::class)
+            ->whereBetween('valid_for', [Carbon::now()->subMonths(2)->month, Carbon::now()->month])
+            ->where('paid', 1);
     }
 }

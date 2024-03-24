@@ -25,6 +25,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Livewire\Attributes\On;
 
 class MembershipResource extends Resource
 {
@@ -124,7 +125,7 @@ class MembershipResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Filter::make('is_featured')
+                Filter::make('valid_for')
                     ->form([TextInput::make('month')->label('Članarina za')->type('month')])
                     ->query(fn(Builder $query, array $data): Builder => $query->when(isset($data['month']), function ($q) use ($data) {
                         $q->where('valid_for', Carbon::make($data['month']));
