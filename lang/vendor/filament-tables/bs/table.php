@@ -92,8 +92,8 @@ return [
             ],
 
             'remove_all' => [
-                'label' => 'Skloni svi filteri',
-                'tooltip' => 'Skloni svi filteri',
+                'label' => 'Ukloni filtere',
+                'tooltip' => 'Ukloni filtere',
             ],
 
             'reset' => [
@@ -102,7 +102,7 @@ return [
 
         ],
 
-        'indicator' => 'Aktivne filteri',
+        'indicator' => 'Aktivni filteri',
 
         'multi_select' => [
             'placeholder' => 'Svi',
